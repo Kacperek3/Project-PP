@@ -128,10 +128,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="conio2.cpp" />
+    <ClCompile Include="newGame.cpp" />
+    <ClCompile Include="Playing.cpp" />
     <ClCompile Include="PP.cpp" />
+    <ClCompile Include="PrintingBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="conio2.h" />
+    <ClInclude Include="Libraries.h" />
+    <ClInclude Include="newGame.h" />
+    <ClInclude Include="Playing.h" />
+    <ClInclude Include="PrintingBoard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
