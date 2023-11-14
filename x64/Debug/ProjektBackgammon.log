@@ -2,5 +2,6 @@
   Playing.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\stdio.h(41,1): warning C4005: "EOF": ponowna definicja makra
 C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\ProjektBackgammon\conio2.h(31,1): message : zobacz poprzednią definicję „EOF”
-C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\ProjektBackgammon\Playing.cpp(79): warning C4715: "countingW”: niewszystkie ścieżki kodu zwracają wartość
+C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\ProjektBackgammon\Playing.cpp(197,35): warning C4390: ";": znaleziono kontrolowaną pustą instrukcję; czy to było zamierzone?
+C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\ProjektBackgammon\Playing.cpp(92): warning C4715: "countingW”: niewszystkie ścieżki kodu zwracają wartość
   ProjektBackgammon.vcxproj -> C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\x64\Debug\ProjektBackgammon.exe

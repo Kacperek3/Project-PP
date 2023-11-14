@@ -36,6 +36,19 @@ int isEmpty(int t[][15], int index) {
 	return 1;
 } // is empty, if it return 1
 
+int isAttacking(int t[][15], int index, int team) {
+	int sumInCol = 0;
+	int teamInColumn = 0;
+	for (int i = 0; i < 15; i++) {
+		if (t[index][i] != 0) {
+			sumInCol++;
+			teamInColumn = t[index][i];
+		}
+	}
+	if (sumInCol == 1 and teamInColumn != team) return 1;
+	return 0;
+}
+
 int isTeam(int t[][15], int index, int team) {
 	
 	for (int i = 0; i < 15; i++) {
@@ -54,7 +67,7 @@ int isTeamW(int t[][15], int index, int team) {
 
 //-------------------------------------------------------
 int correctMoveW(int team, int index, int dice1, int dice2, int w, int banned) {
-	if (w == banned) return 0;
+	if (w-index == banned) return 0;
 	if (team == 1) {
 		if (index + dice1 == w or index + dice2 == w or index + dice1 + dice2 == w) return 1;
 		else return 0;
@@ -138,7 +151,6 @@ void validateN(int t[][15], int team, int *n) {
 	printf("%d", *n);
 }
 
-
 int cinW() {
 	char a[2];
 	int convertedInt = 25;
@@ -168,34 +180,55 @@ int cinW() {
 	return convertedInt;
 }
 
-int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2, int banned) {
+int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2, int banned = 0) {
+	int ban = 0;
 	do {
 		*w = cinW();
+		if (team == 1) {
+			if (index + dice1 == *w) ban = dice1;
+			else if (index + dice2 == *w) ban = dice2;
+		}
+		else {
+			if (index - dice1 == *w) ban = dice1;
+			else if (index - dice2 == *w) ban = dice2;
+		}
+		
 		gotoxy(56, 30);
+
+		if (isAttacking(t, index, team)); break;
+
 	} while (w == 0 or isTeamW(t, *w - 1, team) == 0 or correctMoveW(team, index, dice1, dice2, *w, banned) == 0);
-	return *w;
+	return ban;
 }
 
 void howManyMovesW(int t[][15], int team, int index, int dice1, int dice2, int w) {
 	int banned = 0;
-	int sum = 0;
-	sum = dice1 + dice2;
+	int sum = dice1 + dice2;
+
+	if (dice1 == dice2) sum *= 2;
+
 	int number = 0;
+	gotoxy(95, 16);
+	printf("moves left: %d", sum - number);
+	gotoxy(56, 30);
 	do {
 		validateN(t, team, &index);
-		banned = validateW(t, team, &w, index, dice1, dice2, banned);
+		if (dice1 == dice2)	validateW(t, team, &w, index, dice1, dice2);
+		else banned = validateW(t, team, &w, index, dice1, dice2, banned);
 		number += countingW(team, index, dice1, dice2, w);
-		aToSpace(t, w, team);
 		rFSpace(t, index);
+		aToSpace(t, w, team);
 		clrscr();
 		printB(0, t);
-		gotoxy(90, 15);
+		gotoxy(95, 15);
 		if (team == 1) {
 			cputs("Continue player 1 ");
 		}
 		if (team == 2) {
 			cputs("Continue player 2 ");
 		}
+		gotoxy(96, 16);
+		printf("moves left: %d", sum - number);
 		intro(dice1 , dice2);
 	} while (number != sum);
 }
