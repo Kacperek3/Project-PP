@@ -1,12 +1,16 @@
 #include "Libraries.h"
 
 
+
+
+
+
 void aToSpace(int [][15], int, int );
 void rFSpace(int [][15], int);
 int isEmpty(int t[][15], int);
 void intro(int, int);
 int WhoStart();
-
+void howManyMovesW(int t[][15], int team, int index, int dice1, int dice2, int w, int number, int secret = 0);
 //-------------------------------------------------------
 void aToSpace(int t[][15], int index, int team) {
 	index--;
@@ -36,15 +40,17 @@ int isEmpty(int t[][15], int index) {
 	return 1;
 } // is empty, if it return 1
 
-int isAttacking(int t[][15], int index, int team) {
+int isAttacking(int t[][15], int w, int team) {
+	
 	int sumInCol = 0;
 	int teamInColumn = 0;
 	for (int i = 0; i < 15; i++) {
-		if (t[index][i] != 0) {
+		if (t[w][i] != 0) {
 			sumInCol++;
-			teamInColumn = t[index][i];
+			teamInColumn = t[w][i];
 		}
 	}
+	//std::cout << std::endl <<w << sumInCol << " " << teamInColumn;
 	if (sumInCol == 1 and teamInColumn != team) return 1;
 	return 0;
 }
@@ -67,7 +73,11 @@ int isTeamW(int t[][15], int index, int team) {
 
 //-------------------------------------------------------
 int correctMoveW(int team, int index, int dice1, int dice2, int w, int banned) {
-	if (w-index == banned) return 0;
+	if (w-index == banned or index - w == banned) return 0;
+	// zapobiegniêcie pojechania na zsumowane pole dwóch kostek je¿eli ju¿ wczeœniej wykonana zosta³a operacja przeniesienia pionka o dan¹ kostkê
+	if (dice1 == banned) dice1 = 0;
+	else if (dice2 == banned) dice2 = 0;
+	//
 	if (team == 1) {
 		if (index + dice1 == w or index + dice2 == w or index + dice1 + dice2 == w) return 1;
 		else return 0;
@@ -112,6 +122,23 @@ int randNumber() {
 	}
 	int number = (rand() % 6) + 1;
 	return number;
+}
+void menuBoard(int t[][15], int team, int sum, int number, int dice1, int dice2) {
+	clrscr();
+	printB(0, t);
+	gotoxy(95, 14);
+	if (team == 1) {
+		cputs("Player 1 move");
+	}
+	if (team == 2) {
+		cputs("Player 2 move");
+	}
+	gotoxy(96, 16);
+	printf("moves left: %d", sum - number);
+	gotoxy(85, 18);
+	printf("Type 'u' to undo the entered move");
+	intro(dice1, dice2);
+	gotoxy(56, 30);
 }
 
 int cinN() {
@@ -160,9 +187,15 @@ int cinW() {
 		printf("__");
 		gotoxy(56, 30);
 		a[0] = getch();
+		if (a[0] == 'u') {
+			return 30;
+		}
 		printf("%c", a[0]);
 		if (isdigit(a[0])) {
 			a[1] = getch();
+			if (a[1] == 'u') {
+				return 30;
+			}
 			printf("%c", a[1]);
 			if (!isdigit(a[1])) {
 				a[1] = 'x';
@@ -180,10 +213,27 @@ int cinW() {
 	return convertedInt;
 }
 
-int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2, int banned = 0) {
+int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2,int number, int banned = 0) {
 	int ban = 0;
 	do {
 		*w = cinW();
+		if (*w == 30) {
+			if (banned == dice1) {
+				howManyMovesW(t, team, index, 0, dice2, *w, 0);
+				Game(t, team);
+				return 0;
+			}
+			else if (banned == dice2) {
+				howManyMovesW(t, team, index, dice1, 0, *w, 0);
+				Game(t, team);
+				return 0;
+			}
+			else {
+				howManyMovesW(t, team, index, dice1, dice2, *w, number , sameDice); // last parametr is only when the 2 dices are equal, set to 1
+				Game(t, team);
+				return 0;
+			}
+		}
 		if (team == 1) {
 			if (index + dice1 == *w) ban = dice1;
 			else if (index + dice2 == *w) ban = dice2;
@@ -194,42 +244,31 @@ int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2, in
 		}
 		
 		gotoxy(56, 30);
-
-		if (isAttacking(t, index, team)); break;
+		if (isAttacking(t, *w - 1, team) == 1 and correctMoveW(team, index, dice1, dice2, *w, banned) == 1){
+			rFSpace(t, *w);
+			break;
+		}
 
 	} while (w == 0 or isTeamW(t, *w - 1, team) == 0 or correctMoveW(team, index, dice1, dice2, *w, banned) == 0);
 	return ban;
 }
 
-void howManyMovesW(int t[][15], int team, int index, int dice1, int dice2, int w) {
+
+void howManyMovesW(int t[][15], int team, int index, int dice1, int dice2, int w, int number, int secret) {
 	int banned = 0;
 	int sum = dice1 + dice2;
 
 	if (dice1 == dice2) sum *= 2;
-
-	int number = 0;
-	gotoxy(95, 16);
-	printf("moves left: %d", sum - number);
-	gotoxy(56, 30);
+	
+	menuBoard(t, team, sum, number, dice1, dice2);
 	do {
 		validateN(t, team, &index);
-		if (dice1 == dice2)	validateW(t, team, &w, index, dice1, dice2);
-		else banned = validateW(t, team, &w, index, dice1, dice2, banned);
+		if (dice1 == dice2)	validateW(t, team, &w, index, dice1, dice2, number);
+		else banned = validateW(t, team, &w, index, dice1, dice2,number, banned);
 		number += countingW(team, index, dice1, dice2, w);
 		rFSpace(t, index);
 		aToSpace(t, w, team);
-		clrscr();
-		printB(0, t);
-		gotoxy(95, 15);
-		if (team == 1) {
-			cputs("Continue player 1 ");
-		}
-		if (team == 2) {
-			cputs("Continue player 2 ");
-		}
-		gotoxy(96, 16);
-		printf("moves left: %d", sum - number);
-		intro(dice1 , dice2);
+		menuBoard(t, team, sum, number, dice1, dice2);
 	} while (number != sum);
 }
 
@@ -245,32 +284,27 @@ void intro(int rand1, int rand2) {
 }
 
 void playNewGame(int t[][15]){
-	char b[4640];
+	int number = 0;
 	int n = 0; int w = 0;
 	int rand1 = randNumber();
 	int rand2 = randNumber();
-	gettext(1, 1, 80, 27, b);
-	clrscr();
-	puttext(1, 1, 80, 27, b);
+	printB(0, t);
 	gotoxy(35, 28);
 	int whoStarts = WhoStart();
 	intro(rand1,rand2);
-	howManyMovesW(t, whoStarts, n, rand1, rand2, w);
+	howManyMovesW(t, whoStarts, n, rand1, rand2, w, number);
 	Game(t, whoStarts);
 }
 
 void playGame(int t[][15], int team) {
-	char b[4640];
+	int number = 0;
 	int n = 0; int w = 0;
 	int rand1 = randNumber();
 	int rand2 = randNumber();
-	gettext(1, 1, 80, 27, b);
 	clrscr();
-	puttext(1, 1, 80, 27, b);
-	gotoxy(35, 28);
-	printf("Player number %d", team);
+	printB(0, t);
 	gotoxy(35, 28);
 	intro(rand1, rand2);
-	howManyMovesW(t, team, n, rand1, rand2, w);
+	howManyMovesW(t, team, n, rand1, rand2, w, number);
 	Game(t, team);
 }

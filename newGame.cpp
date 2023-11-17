@@ -35,6 +35,7 @@ void newGame() {
 		zn = getch();
 
 		if (zn == 'm') {
+			clrscr();
 			playNewGame(t);
 		}
 		if (zn == 'r') {
