@@ -245,6 +245,8 @@ int validateW(int t[][15], int team, int* w, int index, int dice1, int dice2,int
 		
 		gotoxy(56, 30);
 		if (isAttacking(t, *w - 1, team) == 1 and correctMoveW(team, index, dice1, dice2, *w, banned) == 1){
+			if (team == Team1)	aToSpace(t, 25, Team2);
+			else if (team == Team2) aToSpace(t, 26, Team1);
 			rFSpace(t, *w);
 			break;
 		}
@@ -296,7 +298,7 @@ void playNewGame(int t[][15]){
 	Game(t, whoStarts);
 }
 
-void playGame(int t[][15], int team) {
+void playGame(int t[][15], int team, int hitted) {
 	int number = 0;
 	int n = 0; int w = 0;
 	int rand1 = randNumber();

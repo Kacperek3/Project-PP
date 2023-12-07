@@ -59,13 +59,13 @@ void printN1() {
 		printf("%d", i);
 		x += 5;
 	}
+
 }
 
 
 void printP2(int t[][15]){
 	int Fx =8; // First x
 	int Fy =6; // First y
-
 	for (int i = 0; i < 12; i++) {
 		for (int j = 0; j < 8; j++) {
 			gotoxy(Fx, Fy);
@@ -101,12 +101,20 @@ void printP2(int t[][15]){
 void printP1(int t[][15]){
 	int Fx = 8; // First x
 	int Fy = 6; // First y
-
+	
 	for (int i = 12; i < 24; i++) {
 		for (int j = 0; j < 8; j++) {
 			gotoxy(Fx, Fy);
-			if (t[i][j] == 1)	putch('1');
-			else if (t[i][j] == 2)	putch('2');
+			if (t[i][j] == 1) {
+				textcolor(RED);
+				putch('1');
+				textcolor(WHITE);
+			}
+			else if (t[i][j] == 2) {
+				textcolor(BLUE);
+				putch('2');
+				textcolor(WHITE);
+			}
 			else	putch('^');
 			Fy++;
 		}
@@ -121,8 +129,16 @@ void printP1(int t[][15]){
 	for (int i = 11; i >= 0; i--) {
 		for (int j = 0; j < 8; j++) {
 			gotoxy(Fx, Fy);
-			if (t[i][j] == 1)	putch('1');
-			else if (t[i][j] == 2)	putch('2');
+			if (t[i][j] == 1) {
+				textcolor(RED);
+				putch('1');
+				textcolor(WHITE);
+			}
+			else if (t[i][j] == 2) {
+				textcolor(BLUE);
+				putch('2');
+				textcolor(WHITE);
+			}
 			else	putch('^');
 			Fy--;
 		}
@@ -132,7 +148,35 @@ void printP1(int t[][15]){
 		Fx += 5;
 		Fy = 26;
 	}
+	textcolor(WHITE);
 }
+
+void printHittedPawns(int t[][15]) {
+	int y = 18;
+	
+	for (int i = 0; i < 8; i++) {
+		gotoxy(42, y);
+		if (t[24][i] == Team2) {
+			textcolor(RED);
+			cputs("2");
+			textcolor(WHITE);
+		}
+		y++;
+	}
+
+	y = 14;
+
+	for (int i = 0; i < 8; i++) {
+		gotoxy(42, y);
+		if (t[25][i] == Team1) {
+			textcolor(BLUE);
+			cputs("1");
+			textcolor(WHITE);
+		}
+		y--;
+	}
+}
+
 
 void printB(int swap, int t[][15]) {
 	gotoxy(1, 2);
@@ -172,6 +216,9 @@ void printB(int swap, int t[][15]) {
 		gotoxy(i, 27);
 		putch('=');
 	}
+
+	printHittedPawns(t);
+
 	if (swap){
 		printN2();
 		printP2(t);

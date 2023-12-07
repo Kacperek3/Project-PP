@@ -11,3 +11,5 @@
 #define Team1  1
 #define Team2  2
 #define sameDice 1
+#define yes 1
+#define no 0

@@ -14,7 +14,7 @@ void menuGame() {
 }
 
 void iniT(int t[][15]) {
-	for (int i = 0; i < 24; i++) {
+	for (int i = 0; i < 26; i++) {
 		for (int j = 0; j < 15; j++) {
 			t[i][j] = 0;
 		}
@@ -26,7 +26,7 @@ void iniT(int t[][15]) {
 void newGame() {
 	clrscr();
 	char zn;
-	int t[24][15];
+	int t[26][15];
 	int reverse = 0;
 	iniT(t);
 	printB(0, t);
@@ -59,7 +59,7 @@ void Game(int t[][15], int team) {
 	do {
 		zn = getch();
 		if (zn == 'm') {
-			playGame(t, (team % 2)+1);
+			playGame(t, (team % 2)+1, no);
 		}
 		if (zn == 'r') {
 			reverse++;
