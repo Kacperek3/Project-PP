@@ -157,7 +157,7 @@ void printHittedPawns(int t[][15]) {
 	for (int i = 0; i < 8; i++) {
 		gotoxy(42, y);
 		if (t[24][i] == Team2) {
-			textcolor(RED);
+			textcolor(BLUE);
 			cputs("2");
 			textcolor(WHITE);
 		}
@@ -169,7 +169,7 @@ void printHittedPawns(int t[][15]) {
 	for (int i = 0; i < 8; i++) {
 		gotoxy(42, y);
 		if (t[25][i] == Team1) {
-			textcolor(BLUE);
+			textcolor(RED);
 			cputs("1");
 			textcolor(WHITE);
 		}

@@ -28,7 +28,23 @@ void newGame() {
 	char zn;
 	int t[26][15];
 	int reverse = 0;
-	iniT(t);
+	//iniT(t);
+
+
+
+	for (int i = 0; i < 26; i++) {
+		for (int j = 0; j < 15; j++) {
+			t[i][j] = 0;
+		}
+	}
+	t[20][0] = Team1;
+	t[16][0] = t[16][1] = Team2;
+	t[21][0] = Team2;
+	t[22][0] = t[22][1] = Team2;
+
+
+
+	
 	printB(0, t);
 	menuNewGame();
 	do {
@@ -50,7 +66,7 @@ void newGame() {
 	return;
 }
 
-void Game(int t[][15], int team) {
+void Game(int t[][15], int team, int hitted) {
 	clrscr();
 	char zn;
 	int reverse = 0;
@@ -59,7 +75,7 @@ void Game(int t[][15], int team) {
 	do {
 		zn = getch();
 		if (zn == 'm') {
-			playGame(t, (team % 2)+1, no);
+			playGame(t, (team % 2)+1, hitted);
 		}
 		if (zn == 'r') {
 			reverse++;
