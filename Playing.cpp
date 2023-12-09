@@ -265,9 +265,19 @@ int isAllHome2(int t[][15]) {
 	if (num == numberPawn) return 1;
 	return 0;
 }
-int closestPawn(int t[][15], int dice, int team) {
+int closestPawn1(int t[][15], int dice, int team) {
 	int nrIndex;
 	for (int i = 18; i < 24;i++) {
+		if (t[i][0] == team) {
+			nrIndex = i;
+			return nrIndex;
+		}
+	}
+	return 0;
+}
+int closestPawn2(int t[][15], int dice, int team) {
+	int nrIndex;
+	for (int i = 5; i >= 0; i--) {
 		if (t[i][0] == team) {
 			nrIndex = i;
 			return nrIndex;
@@ -281,7 +291,7 @@ int isPossibleMove1(int t[][15], int dice1, int dice2, int banned) {
 			if (dice1 == 0) {
 				if (isTeamOrEmpty(t, i + dice2 + 1, Team1) or isAttacking(t, i + dice2, Team1)) return 1;
 			}
-			if (dice2 == 0) {
+			else if (dice2 == 0) {
 				if (isTeamOrEmpty(t, i + dice1 + 1, Team1) or isAttacking(t, i + dice1, Team1)) return 1;
 			}
 			else {
@@ -296,6 +306,29 @@ int isPossibleMove1(int t[][15], int dice1, int dice2, int banned) {
 	}
 	return 0;
 }
+int isPossibleMove2(int t[][15], int dice1, int dice2, int banned) {
+	for (int i = 0; i < 24; i++) {
+		if (t[i][0] == Team2) {
+			if (dice1 == 0) {
+				if (isTeamOrEmpty(t, i - dice2 + 1, Team2) or isAttacking(t, i - dice2, Team2)) return 1;
+			}
+			else if (dice2 == 0) {
+				if (isTeamOrEmpty(t, i - dice1 + 1, Team2) or isAttacking(t, i - dice1, Team2)) return 1;
+			}
+			else {
+				if (isTeamOrEmpty(t, i - dice1 + 1, Team2) or isAttacking(t, i - dice1, Team2) or isTeamOrEmpty(t, i - dice2 + 1, Team2) or isAttacking(t, i - dice2, Team2)) return 1;
+				if (isAllHome2(t)) {
+					if (i + 1 == dice1 or i + 1 == dice2) return 1;
+					if (i + 1 < dice1 and banned != dice1) return 1;
+					if (i + 1 < dice2 and banned != dice2) return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+
 
 int validateW(int t[][15], int team, int* w, int *index, int dice1, int dice2,int number,int *hitted, int banned = 0) {
 	int ban = 0;
@@ -309,9 +342,10 @@ int validateW(int t[][15], int team, int* w, int *index, int dice1, int dice2,in
 		}
 
 		*w = cinW();
+
+
 		if (isAllHome1(t) and team == Team1) {
-			menuRemovingPawn();
-			int x = closestPawn(t, dice1, Team1) + 1;
+			int x = closestPawn1(t, dice1, Team1) + 1;
 			if (25 - *index == dice1 and banned != dice1) {
 				if (*w == 0) {
 					rFSpace(t, *index);
@@ -351,13 +385,54 @@ int validateW(int t[][15], int team, int* w, int *index, int dice1, int dice2,in
 				}
 			}
 		}
+
+
 		else if (isAllHome2(t)) {
-			if (*index == dice1 or *index == dice2) {
+			int x = closestPawn2(t, dice1, Team2) + 1;
+			if (*index == dice1 and banned != dice1) {
 				if (*w == 0) {
 					rFSpace(t, *index);
+					clrscr();
+					printB(0, t);
+					*w = 0;
+					return dice1;
+				}
+			}
+			else if (*index < dice1 and *index == x and banned != dice1) {
+				if (*w == 0) {
+					rFSpace(t, x);
+					clrscr();
+					printB(0, t);
+					*w = 0;
+					*index = dice1;
+					return dice1;
+				}
+			}
+			else if (*index == dice2 and banned != dice2) {
+				if (*w == 0) {
+					rFSpace(t, *index);
+					clrscr();
+					printB(0, t);
+					*w = 0;
+					return dice2;
+				}
+			}
+			else if (*index < dice2 and *index == x and banned != dice2) {
+				if (*w == 0) {
+					rFSpace(t, x);
+					clrscr();
+					printB(0, t);
+					*index = dice2;
+					*w = 0;
+					return dice2;
 				}
 			}
 		}
+
+
+
+
+
 
 		if (*w == 30) {
 			if (banned == dice1) {
@@ -413,11 +488,17 @@ void howManyMovesW(int t[][15], int team, int index, int dice1, int dice2, int w
 			getch();
 			Game(t, team, no);
 		}
+		if (!isPossibleMove2(t, dice1, dice2, banned) and team == Team2) {
+			gotoxy(90, 24);
+			cputs("you must lose your turn");
+			getch();
+			Game(t, team, no);
+		}
 		validateN(t, team, &index);
 		if (dice1 == dice2)	validateW(t, team, &w, &index, dice1, dice2, number, hitted);
 		else banned = validateW(t, team, &w, &index, dice1, dice2,number, hitted, banned);
 		number += countingW(team, index, dice1, dice2, w);
-		if (w != 25) {
+		if (w != 25 and w!= 0) {
 			rFSpace(t, index);
 			aToSpace(t, w, team);
 		}
@@ -471,8 +552,8 @@ void playNewGame(int t[][15]){
 	gotoxy(35, 28);
 	int whoStarts = WhoStart();
 	intro(rand1,rand2);
-	howManyMovesW(t, 1, n, 1, 1, w, number, &hitted);
-	Game(t, whoStarts, hitted);
+	howManyMovesW(t, whoStarts , n, rand1, rand2, w, number, &hitted);
+	Game(t, 2, hitted);
 }
 
 
@@ -534,12 +615,11 @@ int clearHittedPawns(int t[][15],int team, int dice1, int dice2, int *hitted) {
 				if (w ==25 - dice1) return dice1;
 				else if (w == 25 - dice2) return dice2;
 			}
-			else if ((w == 25 - dice1 || w == 25 - dice2) and hittingJump(t, team, w)) { // hitting jump smierdzi chujem, s¹ b³edy
+			else if ((w == 25 - dice1 || w == 25 - dice2) and hittingJump(t, team, w)) { 
 				rFSpace(t, w);
 				aToSpace(t, w, Team2);
 				rFSpace(t, 25);
 				aToSpace(t, 26, Team1);
-				*hitted = yes;
 				if (w == 25 - dice1) return dice1;
 				else if (w == 25 - dice2) return dice2;
 			}
@@ -571,13 +651,13 @@ void playGame(int t[][15], int team, int hitted) {
 
 	clrscr();
 	printB(0, t);
-
 	if (team == 1) {
 		if(isBarTeam1(t))	m = clearHittedPawns(t, team, rand1, rand2, &hitted);
 		clrscr();
 		printB(0, t);
 		if (m == rand1) rand1 = 0;
 		else if (m == rand2) rand2 = 0;
+		m = 0;
 		if (isBarTeam1(t))	m = clearHittedPawns(t, team, rand1, rand2, &hitted);
 		if (m == rand1) rand1 = 0;
 		else if (m == rand2) rand2 = 0;
@@ -588,10 +668,13 @@ void playGame(int t[][15], int team, int hitted) {
 		printB(0, t);
 		if (m == rand1) rand1 = 0;
 		else if (m == rand2) rand2 = 0;
+		m = 0;
 		if (isBarTeam2(t))	m = clearHittedPawns(t, team, rand1, rand2, &hitted);
 		if (m == rand1) rand1 = 0;
 		else if (m == rand2) rand2 = 0;
 	}
+	//printf("%d %d", rand1, rand2); getch();
+	if(rand1 == 0 and rand2 == 0) Game(t, team, hitted);
 	gotoxy(35, 28);
 	intro(rand1, rand2);
 	howManyMovesW(t, team, n, rand1, rand2, w, number, &hitted);
