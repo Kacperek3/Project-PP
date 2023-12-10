@@ -30,6 +30,9 @@
     <ClCompile Include="PrintingBoard.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="saveGame.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="conio2.h">
@@ -45,6 +48,12 @@
       <Filter>Pliki źródłowe</Filter>
     </ClInclude>
     <ClInclude Include="PrintingBoard.h">
+      <Filter>Pliki źródłowe</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveGame.h">
+      <Filter>Pliki źródłowe</Filter>
+    </ClInclude>
+    <ClInclude Include="PP.h">
       <Filter>Pliki źródłowe</Filter>
     </ClInclude>
   </ItemGroup>

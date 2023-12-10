@@ -1,5 +1,5 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: Katalog pośredni (x64\Debug\) zawiera pliki udostępnione z innego projektu (PP.vcxproj). Może to spowodować niepoprawne zachowanie podczas oczyszczania i ponownej kompilacji.
-  newGame.cpp
+  saveGame.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\stdio.h(41,1): warning C4005: "EOF": ponowna definicja makra
 C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\ProjektBackgammon\conio2.h(31,1): message : zobacz poprzednią definicję „EOF”
   ProjektBackgammon.vcxproj -> C:\Users\kapis\OneDrive - Politechnika Gdańska\Pulpit\C++\ProjektBackgammon\x64\Debug\ProjektBackgammon.exe

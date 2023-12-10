@@ -177,7 +177,6 @@ void printHittedPawns(int t[][15]) {
 	}
 }
 
-
 void printB(int swap, int t[][15]) {
 	gotoxy(1, 2);
 	cputs("Game of BACKGAMMON");

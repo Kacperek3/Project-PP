@@ -24,13 +24,16 @@
     <ClCompile Include="Playing.cpp" />
     <ClCompile Include="PP.cpp" />
     <ClCompile Include="PrintingBoard.cpp" />
+    <ClCompile Include="saveGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="conio2.h" />
     <ClInclude Include="Libraries.h" />
     <ClInclude Include="newGame.h" />
     <ClInclude Include="Playing.h" />
+    <ClInclude Include="PP.h" />
     <ClInclude Include="PrintingBoard.h" />
+    <ClInclude Include="SaveGame.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

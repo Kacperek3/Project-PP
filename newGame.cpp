@@ -3,15 +3,14 @@
 void iniT(int t[][15]);
 void menuNewGame() {
 	gotoxy(10, 30);
-	printf("m - move,  r - reverse the board, s - save the game, b - back to menu \n");
+	printf("m - move, s - save the game, b - back to menu \n");
 	printf(": ");
+}
+int keyRand() {
+	srand((unsigned int)time(NULL));
+	return (rand() % 100000) + 1;
 }
 
-void menuGame() {
-	gotoxy(10, 30);
-	printf("m - next move,  r - reverse the board, s - save the game, b - back to menu \n");
-	printf(": ");
-}
 
 void iniT(int t[][15]) {
 	for (int i = 0; i < 26; i++) {
@@ -28,48 +27,58 @@ void newGame() {
 	char zn;
 	int t[26][15];
 	int reverse = 0;
-	
+	int key = keyRand();
 	iniT(t);
-	printB(0, t);
-	menuNewGame();
 	do {
+		printB(0, t);
+		gotoxy(85, 15);
+		printf("key to anylise this game: %d", key);
+		menuNewGame();
 		zn = getch();
-
 		if (zn == 'm') {
 			clrscr();
-			playNewGame(t);
+			playNewGame(t, key);
 		}
-		if (zn == 'r') {
-			reverse++;
-			reverse = reverse % 2;
+		if (zn == 's') {
 			clrscr();
-			zn = ' ';
-			printB(reverse, t);
-			menuNewGame();
+			cputs("Nothing to save...");
+			getch();
+			clrscr();
 		}
+		if (zn == 'b') {
+			clrscr();
+			gotoxy(1, 1);
+			menu();
+			firstChoice();
+		}
+		clrscr();
 	} while (zn != 'q');
 	return;
 }
 
-void Game(int t[][15], int team, int hitted) {
+void Game(int t[][15], int team, int hitted, int key) {
 	clrscr();
 	char zn;
 	int reverse = 0;
-	printB(0, t);
-	menuGame();
 	do {
+		printB(0, t);
+		gotoxy(85, 15);
+		printf("key to anylise this game: %d", key);
+		menuNewGame();
 		zn = getch();
 		if (zn == 'm') {
-			playGame(t, (team % 2)+1, hitted);
+			playGame(t, (team % 2)+1, hitted, key);
 		}
-		if (zn == 'r') {
-			reverse++;
-			reverse = reverse % 2;
+		if (zn == 's') {
+			save(t,team);
+		}
+		if (zn == 'b') {
 			clrscr();
-			zn = ' ';
-			printB(reverse, t);
-			menuGame();
+			gotoxy(1, 1);
+			menu();
+			firstChoice();
 		}
+		clrscr();
 	} while (zn != 'q');
 	return;
 }
